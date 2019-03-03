@@ -6,7 +6,6 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - /etc/init.d/lxc-net restart
     - CONTAINER_ID=$(docker run --rm -d debian:unstable sleep infinity)
     - docker cp lxc-net /etc/default/lxc-net
     - docker cp default.conf /etc/lxc/default.conf
