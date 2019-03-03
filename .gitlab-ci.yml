@@ -33,6 +33,11 @@ build:
     - docker cp default.conf ${CONTAINER_ID}:/etc/lxc/default.conf
     - |
         docker exec ${CONTAINER_ID} bash -c \
+        "cat >/etc/lxc/lxc.conf <<EOT
+        lxc.lxcpath=${WORKING_DIR}/lxc
+        EOT"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
         "/etc/init.d/lxc restart"
     - |
         docker exec ${CONTAINER_ID} bash -c \
