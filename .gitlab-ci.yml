@@ -34,7 +34,7 @@ build:
     - |
         docker exec ${CONTAINER_ID} bash -c \
         "cat >/etc/lxc/lxc.conf <<EOT
-        lxc.lxcpath=${WORKING_DIR}/lxc
+        lxc.lxcpath=/root/lxc
         EOT"
     - |
         docker exec ${CONTAINER_ID} bash -c \
