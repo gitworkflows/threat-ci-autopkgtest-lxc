@@ -6,7 +6,7 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - CONTAINER_ID=$(docker run --rm -d debian:unstable sleep infinity)
+    - CONTAINER_ID=$(docker run --rm --privileged -d debian:unstable sleep infinity)
     - docker exec ${CONTAINER_ID} bash -c "apt-get update && apt-get install eatmydata -y"
     - |
         docker exec ${CONTAINER_ID} bash -c \
