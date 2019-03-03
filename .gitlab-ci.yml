@@ -13,7 +13,7 @@ build:
         "eatmydata apt-get install lxc libvirt-clients libvirt-daemon-system autopkgtest -y"
     - |
         docker exec ${CONTAINER_ID} bash -c \
-        "apt-get install -y dnsmasq-base debci"
+        "eatmydata apt-get install -y dnsmasq-base debci"
     - |
         docker exec ${CONTAINER_ID} bash -c \
         "mount -t tmpfs cgroup_root /sys/fs/cgroup"
@@ -47,7 +47,7 @@ build:
         "virsh net-start default"
     - |
         docker exec ${CONTAINER_ID} bash -c \
-        "debci setup"
+        "eatmydata debci setup"
         #"debci localtest doit"
     - docker commit $[CONTAINER_ID] $CI_REGISTRY_IMAGE/autopkgtest-lxc:latest
     - docker push $CI_REGISTRY_IMAGE/autopkgtest-lxc:latest
