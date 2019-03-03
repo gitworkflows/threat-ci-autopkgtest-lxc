@@ -1,0 +1,49 @@
+image: 
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  script:
+    - /etc/init.d/lxc-net restart
+    - CONTAINER_ID=$(docker run --rm -d debian:unstable sleep infinity)
+    - docker cp lxc-net /etc/default/lxc-net
+    - docker cp default.conf /etc/lxc/default.conf
+    - docker exec ${CONTAINER_ID} bash -c "apt-get update && apt-get install eatmydata -y"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "eatmydata apt-get install lxc libvirt-clients libvirt-daemon-system autopkgtest -y"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "apt-get install -y dnsmasq-base debci"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "mount -t tmpfs cgroup_root /sys/fs/cgroup"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "mkdir /sys/fs/cgroup/cpuset"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "mkdir /sys/fs/cgroup/devices"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset/"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "mount -t cgroup devices -o devices /sys/fs/cgroup/devices"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "/etc/init.d/lxc restart"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "/etc/init.d/libvirtd start"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "virsh net-start default"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
+        "debci setup"
+        #"debci localtest doit"
+    - docker commit $[CONTAINER_ID] $CI_REGISTRY_IMAGE/autopkgtest-lxc:latest
+    - docker push $CI_REGISTRY_IMAGE/autopkgtest-lxc:latest
