@@ -1,6 +1,7 @@
 variables:
    WORKING_DIR: $CI_PROJECT_DIR/lxc
    ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
+   debci_quiet: false
 
 .config-legacy: &config-legacy
   before_script:
@@ -41,7 +42,7 @@ variables:
         cat >/etc/lxc/lxc.conf <<EOT
         lxc.lxcpath=${WORKING_DIR}/lxc
         EOT
-    - /etc/init.d/lxc-net restart | true
+    - /etc/init.d/lxc-net restart || true
     - mount -t tmpfs cgroup_root /sys/fs/cgroup
     - mkdir /sys/fs/cgroup/cpuset
     - mkdir /sys/fs/cgroup/devices
