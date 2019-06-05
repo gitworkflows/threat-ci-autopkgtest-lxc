@@ -1,7 +1,7 @@
 variables:
    WORKING_DIR: $CI_PROJECT_DIR/lxc
    ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
-   debci_quiet: false
+   debci_quiet: 'false'
 
 .config-legacy: &config-legacy
   before_script:
