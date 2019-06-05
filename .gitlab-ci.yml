@@ -46,9 +46,8 @@ variables:
 unstable:
     extends: .build-lxc
 
-# Enable buster when base image is generated. TODO
 buster:
-    extends: .build-new
+    extends: .build-lxc
 
 stretch-backports:
     extends: .build-lxc
