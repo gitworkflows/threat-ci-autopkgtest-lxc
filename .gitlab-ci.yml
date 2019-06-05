@@ -5,19 +5,31 @@ build:
   stage: build
   image: inakimalerba/autopkgtest-tin-chupala
   script:
+    - |
+        cat >/etc/lxc/default.conf <<EOT
+        lxc.net.0.type = veth
+        lxc.net.0.link = lxcbr0
+        lxc.net.0.flags = up
+        lxc.net.0.hwaddr = 00:16:3e:xx:xx:xx
+        lxc.apparmor.profile = unconfined
+        EOT
+    - | 
+        cat >/etc/default/lxc-net <<EOT
+        USE_LXC_BRIDGE="true"
+        EOT
+    - /etc/init.d/lxc-net restart
+    - |
+        cat >/etc/lxc/lxc.conf <<EOT
+        lxc.lxcpath=${WORKING_DIR}/lxc
+        EOT
     - mount -t tmpfs cgroup_root /sys/fs/cgroup
     - mkdir /sys/fs/cgroup/cpuset
     - mkdir /sys/fs/cgroup/devices
     - mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset/
     - mount -t cgroup devices -o devices /sys/fs/cgroup/devices
-    - cp lxc-net /etc/default/lxc-net
-    - cp default.conf /etc/lxc/default.conf
-    - |
-        cat >/etc/lxc/lxc.conf <<EOT
-        lxc.lxcpath=${WORKING_DIR}/lxc
-        EOT
-    - cat /etc/lxc/lxc.conf
+    - /etc/init.d/lxc start
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
     - virsh net-start default
-    - eatmydata debci setup
+    - debci setup
+
