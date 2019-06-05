@@ -1,5 +1,6 @@
 variables:
-   WORKING_DIR: $CI_PROJECT_DIR/public
+   WORKING_DIR: $CI_PROJECT_DIR/lxc
+   PUBLIC_DIR: $CI_PROJECT_DIR/public
 
 pages: 
   stage: build
@@ -32,7 +33,7 @@ pages:
     - /etc/init.d/libvirtd start
     - virsh net-start default
     - debci setup
-    - tar -cf public/lxc.tar public/lxc;
+    - tar -cf ${PUBLIC_DIR}/lxc.tar -C ${WORKING_DIR} .
 
   artifacts:
     paths:
