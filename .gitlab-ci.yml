@@ -41,7 +41,7 @@ variables:
         cat >/etc/lxc/lxc.conf <<EOT
         lxc.lxcpath=${WORKING_DIR}/lxc
         EOT
-    - /etc/init.d/lxc-net restart
+    - /etc/init.d/lxc-net restart | true
     - mount -t tmpfs cgroup_root /sys/fs/cgroup
     - mkdir /sys/fs/cgroup/cpuset
     - mkdir /sys/fs/cgroup/devices
