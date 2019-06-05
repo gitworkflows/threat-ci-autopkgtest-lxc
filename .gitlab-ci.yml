@@ -1,3 +1,6 @@
+variables:
+   WORKING_DIR: $CI_PROJECT_DIR/debian/output
+
 build: 
   stage: build
   image: docker:latest
