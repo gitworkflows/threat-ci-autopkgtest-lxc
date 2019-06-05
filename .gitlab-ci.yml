@@ -4,8 +4,9 @@ variables:
 
 pages: 
   stage: build
-  image: inakimalerba/autopkgtest-tin-chupala
+  image: registry.salsa.debian.org/salsa-ci-team/images/autopkgtest
   script:
+    - apt-get update && eatmydata apt-get install -y dnsmasq-base debci wget
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.net.0.type = veth
