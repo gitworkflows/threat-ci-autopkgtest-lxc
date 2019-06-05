@@ -31,6 +31,9 @@ build:
         EOT"
     - |
         docker exec ${CONTAINER_ID} bash -c \
+        "cat /etc/lxc/lxc.conf"
+    - |
+        docker exec ${CONTAINER_ID} bash -c \
         "/etc/init.d/lxc restart"
     - |
         docker exec ${CONTAINER_ID} bash -c \
