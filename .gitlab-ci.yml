@@ -2,9 +2,9 @@ variables:
    WORKING_DIR: $CI_PROJECT_DIR/lxc
    ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
 
-pages: 
+.build-lxc: 
   stage: build
-  image: registry.salsa.debian.org/salsa-ci-team/images/base
+  image: registry.salsa.debian.org/salsa-ci-team/images/base:${NAME}
   script:
     - apt-get update
     - eatmydata apt-get install -y dnsmasq-base debci wget lxc libvirt-clients libvirt-daemon-system autopkgtest
@@ -41,3 +41,19 @@ pages:
   artifacts:
     paths:
     - ${ARTIFACTS_DIR}
+
+unstable:
+    extends: .build_lxc
+
+# Enable buster when base image is generated. TODO
+#buster:
+#    extends: .build_lxc
+
+stretch-backports:
+    extends: .build_lxc
+
+stretch:
+    extends: .build_lxc
+
+jessie:
+    extends: .build_lxc
