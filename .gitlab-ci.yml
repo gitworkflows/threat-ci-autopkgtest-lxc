@@ -4,6 +4,7 @@ variables:
 
 .config-legacy: &config-legacy
   before_script:
+    - mkdir -p /etc/lxc
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.network.type = veth
@@ -15,6 +16,7 @@ variables:
 
 .config-new: &config-new
   before_script:
+    - mkdir -p /etc/lxc
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.net.0.type = veth
