@@ -35,6 +35,7 @@ pages:
     - /etc/init.d/libvirtd start
     - virsh net-start default
     - debci setup
+    - mkdir -p ${ARTIFACTS_DIR}
     - tar -cf ${ARTIFACTS_DIR}/lxc.tar -C ${WORKING_DIR} --exclude /dev .
 
   artifacts:
