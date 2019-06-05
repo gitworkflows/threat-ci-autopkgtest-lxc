@@ -33,6 +33,7 @@ pages:
     - /etc/init.d/libvirtd start
     - virsh net-start default
     - debci setup
+    - /etc/init.d/lxc stop
     - mkdir ${PUBLIC_DIR}
     - tar -cf ${PUBLIC_DIR}/lxc.tar -C ${WORKING_DIR} .
 
