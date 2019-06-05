@@ -3,21 +3,12 @@ variables:
    ARTIFACTS_DIR: $CI_PROJECT_DIR/artifacts
    debci_quiet: 'false'
 
-.config-legacy: &config-legacy
-  before_script:
-    - mkdir -p /etc/lxc
-    - |
-        cat >/etc/lxc/default.conf <<EOT
-        lxc.network.type = veth
-        lxc.network.link = lxcbr0
-        lxc.network.flags = up
-        lxc.network.hwaddr = 00:16:3e:xx:xx:xx
-        lxc.aa_profile = unconfined
-        EOT
-
-.config-new: &config-new
-  before_script:
-    - mkdir -p /etc/lxc
+.build-lxc: &build-lxc
+  stage: build
+  image: registry.salsa.debian.org/salsa-ci-team/images/base
+  script:
+    - apt-get update
+    - eatmydata apt-get install -y dnsmasq-base debci wget libvirt-clients libvirt-daemon-system autopkgtest lxc
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.net.0.type = veth
@@ -26,14 +17,6 @@ variables:
         lxc.net.0.hwaddr = 00:16:3e:xx:xx:xx
         lxc.apparmor.profile = unconfined
         EOT
-
-.build-lxc: &build-lxc
-  stage: build
-  image: registry.salsa.debian.org/salsa-ci-team/images/base:${CI_JOB_NAME}
-  script:
-    - apt-get update
-    - eatmydata apt-get install -y dnsmasq-base debci wget libvirt-clients libvirt-daemon-system autopkgtest
-    - eatmydata apt-get install -y lxc -o Dpkg::Options::="--force-confold"
     - | 
         cat >/etc/default/lxc-net <<EOT
         USE_LXC_BRIDGE="true"
@@ -52,7 +35,7 @@ variables:
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
     - virsh net-start default
-    - debci setup
+    - debci setup --suite ${CI_JOB_NAME}
     - mkdir -p ${ARTIFACTS_DIR}
     - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
 
@@ -60,26 +43,18 @@ variables:
     paths:
     - ${ARTIFACTS_DIR}
 
-.build-legacy:
-    extends: .build-lxc
-    <<: *config-legacy
-
-.build-new:
-    extends: .build-lxc
-    <<: *config-new
-
 unstable:
-    extends: .build-new
+    extends: .build-lxc
 
 # Enable buster when base image is generated. TODO
-#buster:
-#    extends: .build-new
+buster:
+    extends: .build-new
 
 stretch-backports:
-    extends: .build-legacy
+    extends: .build-lxc
 
 stretch:
-    extends: .build-legacy
+    extends: .build-lxc
 
 jessie:
-    extends: .build-legacy
+    extends: .build-lxc
