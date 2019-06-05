@@ -4,7 +4,6 @@ variables:
 
 .config-legacy: &config-legacy
   before_script:
-    - mkdir -p /etc/lxc
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.network.type = veth
@@ -16,7 +15,6 @@ variables:
 
 .config-new: &config-new
   before_script:
-    - mkdir -p /etc/lxc
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.net.0.type = veth
@@ -31,7 +29,8 @@ variables:
   image: registry.salsa.debian.org/salsa-ci-team/images/base:${CI_JOB_NAME}
   script:
     - apt-get update
-    - eatmydata apt-get install -y dnsmasq-base debci wget lxc libvirt-clients libvirt-daemon-system autopkgtest
+    - eatmydata apt-get install -y dnsmasq-base debci wget libvirt-clients libvirt-daemon-system autopkgtest
+    - eatmydata apt-get install -y lxc -o Dpkg::Options::="--force-confold"
     - | 
         cat >/etc/default/lxc-net <<EOT
         USE_LXC_BRIDGE="true"
