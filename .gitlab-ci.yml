@@ -54,7 +54,7 @@ variables:
     - virsh net-start default
     - debci setup
     - mkdir -p ${ARTIFACTS_DIR}
-    - tar -cf ${ARTIFACTS_DIR}/lxc.tar -C ${WORKING_DIR} --exclude /dev .
+    - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
 
   artifacts:
     paths:
