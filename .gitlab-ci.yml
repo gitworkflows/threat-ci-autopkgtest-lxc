@@ -1,7 +1,7 @@
 variables:
-   WORKING_DIR: $CI_PROJECT_DIR/debian/output
+   WORKING_DIR: $CI_PROJECT_DIR/public
 
-build: 
+pages: 
   stage: build
   image: inakimalerba/autopkgtest-tin-chupala
   script:
@@ -32,4 +32,8 @@ build:
     - /etc/init.d/libvirtd start
     - virsh net-start default
     - debci setup
+    - tar -cf public/lxc.tar public/lxc;
 
+  artifacts:
+    paths:
+    - public
