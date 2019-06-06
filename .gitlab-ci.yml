@@ -38,7 +38,7 @@ variables:
     - virsh net-start default
     - debci setup --suite ${NAME}
 
-  after_scripts:
+  after_script:
     - mkdir -p ${ARTIFACTS_DIR}
     - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
 
@@ -56,7 +56,7 @@ stretch-backports:
     variables:
         NAME: 'stretch'
     extends: .build-lxc
-    after_scripts:
+    after_script:
         - echo "deb http://deb.debian.org/debian stretch-backports main" > ${WORKING_DIR}/lxc/autopkgtest-${NAME:-CI_JOB_NAME}-amd64/rootfs/etc/apt/sources.list.d/backports.list
         - mkdir -p ${ARTIFACTS_DIR}
         - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
