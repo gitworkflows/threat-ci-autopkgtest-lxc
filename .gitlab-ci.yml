@@ -7,6 +7,7 @@ variables:
   stage: build
   image: registry.salsa.debian.org/salsa-ci-team/images/base
   script:
+    - NAME="${NAME:-$CI_JOB_NAME}"
     - apt-get update
     - eatmydata apt-get install -y dnsmasq-base debci wget libvirt-clients libvirt-daemon-system autopkgtest lxc
     - |
@@ -35,7 +36,9 @@ variables:
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
     - virsh net-start default
-    - debci setup --suite ${CI_JOB_NAME}
+    - debci setup --suite ${NAME}
+
+  after_scripts:
     - mkdir -p ${ARTIFACTS_DIR}
     - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
 
@@ -50,7 +53,14 @@ buster:
     extends: .build-lxc
 
 stretch-backports:
+    variables:
+        NAME: 'stretch'
     extends: .build-lxc
+    after_scripts:
+        - echo "deb http://deb.debian.org/debian stretch-backports main" > ${WORKING_DIR}/lxc/autopkgtest-${NAME:-CI_JOB_NAME}-amd64/rootfs/etc/apt/sources.list.d/backports.list
+        - mkdir -p ${ARTIFACTS_DIR}
+        - tar -cf ${ARTIFACTS_DIR}/lxc.tar --exclude /dev -C ${WORKING_DIR} .
+
 
 stretch:
     extends: .build-lxc
