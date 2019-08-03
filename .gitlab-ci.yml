@@ -70,6 +70,9 @@ stable:
 buster:
     extends: .build-lxc
 
+bullseye:
+    extends: .build-lxc
+
 stretch-backports:
     variables:
         NAME: 'stretch'
