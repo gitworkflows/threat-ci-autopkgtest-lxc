@@ -58,26 +58,20 @@ experimental:
     extends: .build-lxc
     <<: *not-a-real-distribution-after-script
 
-testing:
+unstable:
     extends: .build-lxc
 
-unstable:
+testing:
     extends: .build-lxc
 
 stable:
     extends: .build-lxc
 
-buster:
-    extends: .build-lxc
-
 bullseye:
     extends: .build-lxc
 
-stretch-backports:
-    variables:
-        NAME: 'stretch'
+buster:
     extends: .build-lxc
-    <<: *not-a-real-distribution-after-script
 
 stretch:
     extends: .build-lxc
@@ -85,3 +79,9 @@ stretch:
 # Jessie mirrors are not working
 #jessie:
 #    extends: .build-lxc
+
+stretch-backports:
+    variables:
+        NAME: 'stretch'
+    extends: .build-lxc
+    <<: *not-a-real-distribution-after-script
