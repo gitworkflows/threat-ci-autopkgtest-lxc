@@ -37,6 +37,12 @@ stages:
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
     - virsh net-start default
+    - |
+        if [ ! -e /usr/share/debci/bin/debci-generate-apt-sources ]; then
+            for p in $(find ${CI_PROJECT_DIR}/patches -name \*.patch | sort); do
+                patch -p1 -d /usr/share/debci <$p;
+            done
+        fi
     - debci setup --suite ${CI_JOB_NAME}
 
   after_script:
@@ -81,6 +87,9 @@ stable:
 oldstable:
   extends: .build-base
 
+oldoldstable:
+  extends: .build-base
+
 sid:
   extends: .build-inherited
   dependencies:
@@ -101,11 +110,10 @@ stretch:
   dependencies:
     - oldstable
 
-# Jessie mirrors are not working
-#jessie:
-#  extends: .build-inherited
-#  dependencies:
-#    - oldoldstable
+jessie:
+  extends: .build-inherited
+  dependencies:
+    - oldoldstable
 
 stretch-backports:
   extends: .build-inherited
