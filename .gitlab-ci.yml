@@ -9,7 +9,7 @@ stages:
 
 .build-base: &build-base
   stage: base
-  image: registry.salsa.debian.org/salsa-ci-team/images/autopkgtest
+  image: registry.salsa.debian.org/salsa-ci-team/pipeline/autopkgtest
   script:
     - |
         cat >/etc/lxc/default.conf <<EOT
