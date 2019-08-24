@@ -87,6 +87,9 @@ stable:
 oldstable:
   extends: .build-base
 
+oldoldstable:
+  extends: .build-base
+
 sid:
   extends: .build-inherited
   dependencies:
@@ -107,11 +110,10 @@ stretch:
   dependencies:
     - oldstable
 
-# Jessie mirrors are not working
-#jessie:
-#  extends: .build-inherited
-#  dependencies:
-#    - oldoldstable
+jessie:
+  extends: .build-inherited
+  dependencies:
+    - oldoldstable
 
 stretch-backports:
   extends: .build-inherited
