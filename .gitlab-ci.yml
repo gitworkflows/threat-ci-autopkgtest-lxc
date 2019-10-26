@@ -105,6 +105,11 @@ buster:
   dependencies:
     - stable
 
+buster-backports:
+  extends: .build-inherited
+  dependencies:
+    - stable
+
 stretch:
   extends: .build-inherited
   dependencies:
