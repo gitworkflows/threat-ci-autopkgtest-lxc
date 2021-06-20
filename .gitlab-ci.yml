@@ -89,9 +89,6 @@ stable:
 oldstable:
   extends: .build-base
 
-oldoldstable:
-  extends: .build-base
-
 sid:
   extends: .build-inherited
   dependencies:
@@ -116,11 +113,6 @@ stretch:
   extends: .build-inherited
   dependencies:
     - oldstable
-
-jessie:
-  extends: .build-inherited
-  dependencies:
-    - oldoldstable
 
 stretch-backports:
   extends: .build-inherited
