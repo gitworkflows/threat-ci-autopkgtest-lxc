@@ -89,32 +89,45 @@ stable:
 oldstable:
   extends: .build-base
 
+oldoldstable:
+  extends: .build-base
+
 sid:
   extends: .build-inherited
   dependencies:
     - unstable
 
-bullseye:
+bookworm:
   extends: .build-inherited
   dependencies:
     - testing
 
-buster:
+bullseye:
   extends: .build-inherited
   dependencies:
     - stable
+
+bullseye-backports:
+  extends: .build-inherited
+  dependencies:
+    - stable
+
+buster:
+  extends: .build-inherited
+  dependencies:
+    - oldstable
 
 buster-backports:
   extends: .build-inherited
   dependencies:
-    - stable
+    - oldstable
 
 stretch:
   extends: .build-inherited
   dependencies:
-    - oldstable
+    - oldoldstable
 
 stretch-backports:
   extends: .build-inherited
   dependencies:
-    - oldstable
+    - oldoldstable
