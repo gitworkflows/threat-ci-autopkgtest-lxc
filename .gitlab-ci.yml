@@ -28,11 +28,6 @@ stages:
         lxc.lxcpath=${WORKING_DIR}
         EOT
     - /etc/init.d/lxc-net restart || true
-    - mount -t tmpfs cgroup_root /sys/fs/cgroup
-    - mkdir /sys/fs/cgroup/cpuset
-    - mkdir /sys/fs/cgroup/devices
-    - mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset/
-    - mount -t cgroup devices -o devices /sys/fs/cgroup/devices
     - /etc/init.d/lxc start
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
@@ -85,6 +80,11 @@ testing:
 
 stable:
   extends: .build-base
+
+stable-backports:
+  extends: .build-inherited
+  dependencies:
+    - stable
 
 oldstable:
   extends: .build-base
