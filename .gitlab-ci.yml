@@ -86,6 +86,11 @@ testing:
 stable:
   extends: .build-base
 
+stable-backports:
+  extends: .build-inherited
+  dependencies:
+    - stable
+
 oldstable:
   extends: .build-base
 
