@@ -89,9 +89,6 @@ stable-backports:
 oldstable:
   extends: .build-base
 
-oldoldstable:
-  extends: .build-base
-
 sid:
   extends: .build-inherited
   dependencies:
@@ -121,13 +118,3 @@ buster-backports:
   extends: .build-inherited
   dependencies:
     - oldstable
-
-stretch:
-  extends: .build-inherited
-  dependencies:
-    - oldoldstable
-
-stretch-backports:
-  extends: .build-inherited
-  dependencies:
-    - oldoldstable
