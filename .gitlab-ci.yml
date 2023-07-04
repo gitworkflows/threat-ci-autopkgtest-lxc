@@ -135,6 +135,11 @@ oldstable-backports:
 oldoldstable:
   extends: .build-base
 
+rc-buggy:
+  extends: .build-inherited
+  dependencies:
+    - experimental
+
 sid:
   extends: .build-inherited
   dependencies:
