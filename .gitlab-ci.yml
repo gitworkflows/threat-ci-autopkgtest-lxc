@@ -17,7 +17,7 @@ stages:
     - |
         UNDERLYING_NET=0
         for n in $(seq 122 129); do
-          bash -c "echo >/dev/tcp/192.168.${n}.1/22" \
+          bash -c "echo >/dev/tcp/192.168.${n}.1/53" \
             || { UNDERLYING_NET=${n} ; break; }
         done
         if [ "$UNDERLYING_NET" -eq 0 ]; then
