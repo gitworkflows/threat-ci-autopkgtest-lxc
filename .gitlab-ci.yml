@@ -11,6 +11,19 @@ stages:
   stage: base
   image: registry.salsa.debian.org/salsa-ci-team/pipeline/autopkgtest
   script:
+    - export
+    # In case there is an underlying network already with the same network address, e.g. a runner
+    # running on top of a libvirtd VM, we need to look for another network
+    - |
+        UNDERLYING_NET=0
+        for n in $(seq 122 129); do
+          bash -c "echo >/dev/tcp/192.168.${n}.1/53" \
+            || { UNDERLYING_NET=${n} ; break; }
+        done
+        if [ "$UNDERLYING_NET" -eq 0 ]; then
+          echo "unable to find an unused network" >&2
+          exit 1
+        fi
     - |
         cat >/etc/lxc/default.conf <<EOT
         lxc.net.0.type = veth
@@ -31,6 +44,17 @@ stages:
     - /etc/init.d/lxc start
     - /etc/init.d/lxc restart
     - /etc/init.d/libvirtd start
+
+    - test "$UNDERLYING_NET" -ne "122" && echo "The default libvirtd network seems to be unavailble and will be be replaced by 192.168.${UNDERLYING_NET}.0/24"
+    - |
+        if [ "$UNDERLYING_NET" -ne 122 ] ; then
+          virsh net-destroy default || true
+          virsh net-dumpxml default > /tmp/default.xml
+          sed -i -e "s/='192\.168\.122\.\([0-9]\+\)'/='192.168.${UNDERLYING_NET}.\1'/g" /tmp/default.xml
+          virsh net-undefine default
+          virsh net-define /tmp/default.xml
+        fi
+
     - virsh net-start default
     - |
         if [ ! -e /usr/share/debci/bin/debci-generate-apt-sources ]; then
