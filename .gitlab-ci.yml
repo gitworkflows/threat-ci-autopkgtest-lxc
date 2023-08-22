@@ -72,6 +72,10 @@ stages:
   artifacts:
     paths:
     - ${ARTIFACTS_DIR}
+  retry:
+    max: 1
+    when:
+      - script_failure
 
 .build-inherited: &build-inherited
   stage: inherited
