@@ -96,6 +96,8 @@ stages:
     paths:
     - ${ARTIFACTS_DIR}
 
+# debootstrap doesn't have a script for experimental
+# we need to make this job depend on unstable
 experimental:
   extends: .build-inherited
   dependencies:
@@ -138,7 +140,7 @@ oldoldstable:
 rc-buggy:
   extends: .build-inherited
   dependencies:
-    - experimental
+    - unstable
 
 sid:
   extends: .build-inherited
