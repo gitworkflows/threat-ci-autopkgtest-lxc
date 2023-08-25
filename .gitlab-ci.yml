@@ -97,7 +97,9 @@ stages:
     - ${ARTIFACTS_DIR}
 
 experimental:
-  extends: .build-base
+  extends: .build-inherited
+  dependencies:
+    - unstable
 
 unstable:
   extends: .build-base
