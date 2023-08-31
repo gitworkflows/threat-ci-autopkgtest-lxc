@@ -11,6 +11,15 @@ stages:
 .build-base: &build-base
   stage: base
   image: registry.gitlab.com/kalilinux/tools/kali-ci-pipeline/autopkgtest
+  before_script:
+    # Remount /builds with the dev option if needed.
+    # Since GitLab migrated to Google Container-Optimized OS & Docker 19.03.15
+    # in August 2021, /builds is mounted with the option nodev, and it breaks
+    # debootstrap. References:
+    # * https://gitlab.com/kalilinux/build-scripts/kali-docker/-/issues/40
+    # * https://gitlab.com/gitlab-com/gl-infra/production/-/issues/5184
+    - |
+        findmnt -no options -T . | grep -qw nodev && mount -vo remount,dev $(stat -c %m .) || true
   script:
     - export
     # In case there is an underlying network already with the same network address, e.g. a runner
