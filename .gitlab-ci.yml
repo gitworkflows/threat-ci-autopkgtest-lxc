@@ -29,6 +29,8 @@ stages:
         mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset/
         mount -t cgroup devices -o devices /sys/fs/cgroup/devices
   script:
+    # eatmydata can't be preloaded due to apparmor, remove it to avoid error messages
+    - test -e /usr/bin/eatmydata && apt-get remove -y eatmydata
     - export
     # In case there is an underlying network already with the same network address, e.g. a runner
     # running on top of a libvirtd VM, we need to look for another network
