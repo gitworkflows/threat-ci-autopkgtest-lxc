@@ -20,6 +20,14 @@ stages:
     # * https://gitlab.com/gitlab-com/gl-infra/production/-/issues/5184
     - |
         findmnt -no options -T . | grep -qw nodev && mount -vo remount,dev $(stat -c %m .) || true
+    # Setup mount points, apparently required if host uses cgroups v1.
+    # Dropped upstream in 36952e6, as Salsa hosts use cgroups v2, I guess.
+    - |
+        mount -t tmpfs cgroup_root /sys/fs/cgroup
+        mkdir /sys/fs/cgroup/cpuset
+        mkdir /sys/fs/cgroup/devices
+        mount -t cgroup cpuset -o cpuset /sys/fs/cgroup/cpuset/
+        mount -t cgroup devices -o devices /sys/fs/cgroup/devices
   script:
     - export
     # In case there is an underlying network already with the same network address, e.g. a runner
