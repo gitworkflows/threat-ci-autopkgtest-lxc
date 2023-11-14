@@ -82,9 +82,8 @@ stages:
                 patch -p1 -d /usr/share/debci <$p;
             done
         fi
-    # Use kali.download to avoid transient failures caused by unreliable or outdated
-    # mirrors. kali.download is a CDN, it should be reliable and have zero downtime.
-    - debci setup --suite ${CI_JOB_NAME%%_*} --mirror http://kali.download/kali/
+    # Use http-staging.kali.org
+    - debci setup --suite ${CI_JOB_NAME%%_*} --mirror http://http-staging.kali.org/kali/
 
   after_script:
     - mkdir -p ${ARTIFACTS_DIR}
@@ -109,7 +108,7 @@ stages:
     - tar -C "${WORKING_DIR}" -xf "${ARTIFACTS_DIR}/lxc-${ARCH}.tar"
     - BASENAME=$(ls -1 "${WORKING_DIR}" | sed -e 's/^autopkgtest-//' -e "s/-${ARCH}"'$'"//")
     - mv "${WORKING_DIR}"/autopkgtest-${BASENAME}-${ARCH} "${WORKING_DIR}/autopkgtest-${CI_JOB_NAME%%_*}-${ARCH}"
-    - echo "deb http://kali.download/kali ${CI_JOB_NAME%%_*} main contrib non-free non-free-firmware" > "${WORKING_DIR}/autopkgtest-${CI_JOB_NAME%%_*}-${ARCH}/rootfs/etc/apt/sources.list.d/sci.list"
+    - echo "deb http://http-staging.kali.org/kali ${CI_JOB_NAME%%_*} main contrib non-free non-free-firmware" > "${WORKING_DIR}/autopkgtest-${CI_JOB_NAME%%_*}-${ARCH}/rootfs/etc/apt/sources.list.d/sci.list"
     - sed -i "s/${BASENAME}/${CI_JOB_NAME%%_*}/g" "${WORKING_DIR}/autopkgtest-${CI_JOB_NAME%%_*}-${ARCH}/config"
     - tar -cf "${ARTIFACTS_DIR}/lxc-${ARCH}.tar" --exclude /dev -C "${WORKING_DIR}" .
     - md5sum ${ARTIFACTS_DIR}/lxc-${ARCH}.tar > ${ARTIFACTS_DIR}/lxc-${ARCH}.tar.md5
